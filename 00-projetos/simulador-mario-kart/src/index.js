@@ -1,6 +1,6 @@
 //base do projeto : https://github.com/digitalinnovationone/formacao-nodejs/tree/main/03-projeto-mario-kart
 
-//NOME DOS JOGADORES - 
+//NOME DOS JOGADORES -
 
 const player1 = {
   NOME: "Mario",
@@ -61,5 +61,14 @@ async function rollDice() {
 //Criar uma função para ser autoinvocada ao iniciar a aplicação
 
 (async function main() {
-  console.log("Iniciando simulador do Mário Kart 🏎️");
+  console.log("Iniciando simulador do Mário Kart 🏎️ \n");
 })();
+
+//início da lógica do jogo:
+console.log("Escolha o seu personagem: \n");
+
+console.log(
+  "1 - Mario \n2 - Luigi \n3 - Peach \n4 - Yoshi \n5 - Bowser \n6 - Donkey Kong"
+);
+
+console.log("Digite o número do seu personagem: ");
