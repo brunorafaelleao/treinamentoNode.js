@@ -1,6 +1,6 @@
 //base do projeto : https://github.com/digitalinnovationone/formacao-nodejs/tree/main/03-projeto-mario-kart
 
-//NOME DOS JOGADORES
+//NOME DOS JOGADORES - 
 
 const player1 = {
   NOME: "Mario",
