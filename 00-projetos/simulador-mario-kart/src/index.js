@@ -1,7 +1,6 @@
 //base do projeto : https://github.com/digitalinnovationone/formacao-nodejs/tree/main/03-projeto-mario-kart
 
 //NOME DOS JOGADORES -
-
 const player1 = {
   NOME: "Mario",
   VELOCIDADE: 4,
@@ -50,6 +49,9 @@ const player6 = {
   PONTOS: 0,
 };
 
+//id dos jogadores
+idJogadores = [player1, player2, player3, player4, player5, player6];
+
 //método para receber a escolha do personagem usando o input do usuário.
 const lerdados = require("readline").createInterface({
   input: process.stdin,
@@ -64,38 +66,93 @@ async function rollDice() {
   return Math.floor(Math.random() * 6) + 1;
 }
 
+//função recursiva da escolha do personagem até que escolha um correto
+function escolherPersonagem() {
+  return new Promise((resolve) => {
+    lerdados.question("Digite o número do personagem: ", (value) => {
+      let personagemEscolhido;
+
+      switch (value) {
+        case "1":
+          index = value - 1;
+          personagemEscolhido = idJogadores[index];
+          index2 = Math.floor(Math.random() * idJogadores.length);
+          adversario = idJogadores[index2];
+          console.log(
+            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
+          );
+          return resolve(personagemEscolhido);
+
+        case "2":
+          index = value - 1;
+          personagemEscolhido = idJogadores[index];
+          index2 = Math.floor(Math.random() * idJogadores.length);
+          adversario = idJogadores[index2];
+          console.log(
+            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
+          );
+          return resolve(personagemEscolhido);
+
+        case "3":
+          index = value - 1;
+          personagemEscolhido = idJogadores[index];
+          index2 = Math.floor(Math.random() * idJogadores.length);
+          adversario = idJogadores[index2];
+          console.log(
+            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
+          );
+          return resolve(personagemEscolhido);
+
+        case "4":
+          index = value - 1;
+          personagemEscolhido = idJogadores[index];
+          index2 = Math.floor(Math.random() * idJogadores.length);
+          adversario = idJogadores[index2];
+          console.log(
+            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
+          );
+          return resolve(personagemEscolhido);
+        case "5":
+          index = value - 1;
+          personagemEscolhido = idJogadores[index];
+          index2 = Math.floor(Math.random() * idJogadores.length);
+          adversario = idJogadores[index2];
+          console.log(
+            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
+          );
+          return resolve(personagemEscolhido);
+
+        case "6":
+          index = value - 1;
+          personagemEscolhido = idJogadores[index];
+          index2 = Math.floor(Math.random() * idJogadores.length);
+          adversario = idJogadores[index2];
+          console.log(
+            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
+          );
+          return resolve(personagemEscolhido);
+
+        default:
+          console.log(
+            "\nNúmero inválido! Por favor, digite um número entre 1 e 6.\n"
+          );
+          // Chama novamente e retorna o resultado da nova Promise
+          return resolve(escolherPersonagem());
+      }
+    });
+  });
+}
+
 //Criar uma função para ser autoinvocada ao iniciar a aplicação
 
 (async function main() {
   console.log("Iniciando simulador do Mário Kart 🏎️ \n");
+  //início da lógica do jogo:
+  console.log("Escolha o seu personagem: \n");
+
+  console.log(
+    "1 - Mario \n2 - Luigi \n3 - Peach \n4 - Yoshi \n5 - Bowser \n6 - Donkey Kong"
+  );
+
+  escolherPersonagem();
 })();
-
-//início da lógica do jogo:
-console.log("Escolha o seu personagem: \n");
-
-console.log(
-  "1 - Mario \n2 - Luigi \n3 - Peach \n4 - Yoshi \n5 - Bowser \n6 - Donkey Kong"
-);
-
-lerdados.question("Digite o número do personagem: ", (personagem) => {
-  switch (personagem) {
-    case "1":
-      console.log("Seu personagem escolhido foi: Mario \n");
-      break;
-    case "2":
-      console.log("Seu personagem escolhido foi: Luigi \n");
-      break;
-    case "3":
-      console.log("Seu personagem escolhido foi: Peach \n");
-      break;
-    case "4":
-      console.log("Seu personagem escolhido foi: Yoshi \n");
-      break;
-    case "5":
-      console.log("Seu personagem escolhido foi: Bowser \n");
-      break;
-    case "6":
-      console.log("Seu personagem escolhido foi: Donkey Kong \n");
-      break;
-  }
-});
