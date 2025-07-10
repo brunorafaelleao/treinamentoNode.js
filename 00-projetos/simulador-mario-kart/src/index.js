@@ -52,6 +52,9 @@ const player6 = {
 //id dos jogadores
 idJogadores = [player1, player2, player3, player4, player5, player6];
 
+//array das pistas
+blocosDePista = ["Reta", "Curva", "Confronto"];
+
 //método para receber a escolha do personagem usando o input do usuário.
 const lerdados = require("readline").createInterface({
   input: process.stdin,
@@ -69,75 +72,98 @@ async function rollDice() {
 //função recursiva da escolha do personagem até que escolha um correto
 function escolherPersonagem() {
   return new Promise((resolve) => {
-    lerdados.question("Digite o número do personagem: ", (value) => {
-      let personagemEscolhido;
+    lerdados.question("Digite o número do personagem: ", async (value) => {
+      const index = parseInt(value) - 1;
 
-      switch (value) {
-        case "1":
-          index = value - 1;
-          personagemEscolhido = idJogadores[index];
-          index2 = Math.floor(Math.random() * idJogadores.length);
-          adversario = idJogadores[index2];
-          console.log(
-            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
-          );
-          return resolve(personagemEscolhido);
+      if (index >= 0 && index < idJogadores.length) {
+        const personagemEscolhido = idJogadores[index];
 
-        case "2":
-          index = value - 1;
-          personagemEscolhido = idJogadores[index];
+        // Sorteia adversário diferente
+        let index2;
+        do {
           index2 = Math.floor(Math.random() * idJogadores.length);
-          adversario = idJogadores[index2];
-          console.log(
-            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
-          );
-          return resolve(personagemEscolhido);
+        } while (index2 === index);
 
-        case "3":
-          index = value - 1;
-          personagemEscolhido = idJogadores[index];
-          index2 = Math.floor(Math.random() * idJogadores.length);
-          adversario = idJogadores[index2];
-          console.log(
-            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
-          );
-          return resolve(personagemEscolhido);
+        const adversario = idJogadores[index2];
 
-        case "4":
-          index = value - 1;
-          personagemEscolhido = idJogadores[index];
-          index2 = Math.floor(Math.random() * idJogadores.length);
-          adversario = idJogadores[index2];
-          console.log(
-            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
-          );
-          return resolve(personagemEscolhido);
-        case "5":
-          index = value - 1;
-          personagemEscolhido = idJogadores[index];
-          index2 = Math.floor(Math.random() * idJogadores.length);
-          adversario = idJogadores[index2];
-          console.log(
-            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
-          );
-          return resolve(personagemEscolhido);
+        console.log(
+          `\nSeu personagem escolhido foi: ${personagemEscolhido.NOME}`
+        );
+        console.log(`Seu adversário será: ${adversario.NOME}\n`);
 
-        case "6":
-          index = value - 1;
-          personagemEscolhido = idJogadores[index];
-          index2 = Math.floor(Math.random() * idJogadores.length);
-          adversario = idJogadores[index2];
-          console.log(
-            `Seu personagem escolhido foi: ${personagemEscolhido.NOME} e você vai competir com ${adversario.NOME} \n`
-          );
-          return resolve(personagemEscolhido);
+        for (let rodada = 1; rodada <= 5; rodada++) {
+          const blocoRodada =
+            blocosDePista[Math.floor(Math.random() * blocosDePista.length)];
+          console.log(`🏁 Rodada ${rodada}: Bloco da pista: ${blocoRodada}`);
 
-        default:
-          console.log(
-            "\nNúmero inválido! Por favor, digite um número entre 1 e 6.\n"
-          );
-          // Chama novamente e retorna o resultado da nova Promise
-          return resolve(escolherPersonagem());
+          let meusPontos = 0;
+          let pontosAdversario = 0;
+
+          if (blocoRodada === "Reta") {
+            meusPontos = personagemEscolhido.VELOCIDADE + (await rollDice());
+            pontosAdversario = adversario.VELOCIDADE + (await rollDice());
+          } else if (blocoRodada === "Curva") {
+            meusPontos =
+              personagemEscolhido.MANOBRABILIDADE + (await rollDice());
+            pontosAdversario = adversario.MANOBRABILIDADE + (await rollDice());
+          } else if (blocoRodada === "Confronto") {
+            meusPontos = personagemEscolhido.PODER + (await rollDice());
+            pontosAdversario = adversario.PODER + (await rollDice());
+          }
+
+          console.log(`${personagemEscolhido.NOME} tirou ${meusPontos} pontos`);
+          console.log(`${adversario.NOME} tirou ${pontosAdversario} pontos`);
+
+          if (blocoRodada === "Confronto") {
+            if (meusPontos > pontosAdversario) {
+              adversario.PONTOS = Math.max(0, adversario.PONTOS - 1);
+              console.log(`${personagemEscolhido.NOME} ganhou o confronto!\n`);
+            } else if (meusPontos < pontosAdversario) {
+              personagemEscolhido.PONTOS = Math.max(
+                0,
+                personagemEscolhido.PONTOS - 1
+              );
+              console.log(`${adversario.NOME} ganhou o confronto!\n`);
+            } else {
+              console.log("Empate no confronto!\n");
+            }
+          } else {
+            if (meusPontos > pontosAdversario) {
+              personagemEscolhido.PONTOS++;
+              console.log(
+                `${personagemEscolhido.NOME} ganhou a rodada ${rodada}!\n`
+              );
+            } else if (meusPontos < pontosAdversario) {
+              adversario.PONTOS++;
+              console.log(`${adversario.NOME} ganhou a rodada ${rodada}!\n`);
+            } else {
+              console.log(`Empate na rodada ${rodada}!\n`);
+            }
+          }
+        }
+
+        // Resultado final
+        console.log("🏆 Placar Final:");
+        console.log(
+          `${personagemEscolhido.NOME}: ${personagemEscolhido.PONTOS} pontos`
+        );
+        console.log(`${adversario.NOME}: ${adversario.PONTOS} pontos`);
+
+        if (personagemEscolhido.PONTOS > adversario.PONTOS) {
+          console.log(`\n🎉 ${personagemEscolhido.NOME} venceu a corrida!\n`);
+        } else if (personagemEscolhido.PONTOS < adversario.PONTOS) {
+          console.log(`\n💥 ${adversario.NOME} venceu a corrida!\n`);
+        } else {
+          console.log("\n⚔️ A corrida terminou em empate!\n");
+        }
+
+        lerdados.close();
+        return resolve(personagemEscolhido);
+      } else {
+        console.log(
+          "\nNúmero inválido! Por favor, digite um número entre 1 e 6.\n"
+        );
+        return resolve(escolherPersonagem());
       }
     });
   });
@@ -146,9 +172,13 @@ function escolherPersonagem() {
 //Criar uma função para ser autoinvocada ao iniciar a aplicação
 
 (async function main() {
-  console.log("Iniciando simulador do Mário Kart 🏎️ \n");
+  console.log(
+    "Iniciando simulador do Mário Kart 🏎️ \nFaremos uma partida de 5 rodadas.\nBoa sorte!!!\n"
+  );
   //início da lógica do jogo:
-  console.log("Escolha o seu personagem: \n");
+  console.log(
+    "Escolha o seu personagem para uma corrida de 5 rodadas. Boa Sorte!: \n"
+  );
 
   console.log(
     "1 - Mario \n2 - Luigi \n3 - Peach \n4 - Yoshi \n5 - Bowser \n6 - Donkey Kong"
